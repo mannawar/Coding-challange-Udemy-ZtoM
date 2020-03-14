@@ -1,60 +1,124 @@
-// JavaScript is a single threaded language that can be non-blocking
-//chrome has v8 javaScript engine. it has two parts viz. memory heap and call stack
-//memory leak- unused memory
-const a = 1;
-const b = 10;
-const c = 100;
-//Global variables are bad because they remain in memory even if they aren't used
+Question 1: Clean the room function: given an input of [1,2,4,591,392,391,2,5,10,2,1,1,1,20,20], 
+make a function that organizes these into individual array that is ordered. 
+For example answer(ArrayFromAbove) should return: [[1,1,1,1],[2,2,2], 4,5,10,[20,20], 391, 392,591]. 
+onus: Make it so it organizes strings differently from number types. i.e. [1, "2", "3", 2] 
+should return [[1,2], ["2", "3"]]
 
-//call stack(synchronous task- line-10 will get exceuted first, then line-11 and then line-12)
-console.log('1');
-console.log('2');
-console.log('3');
+//sol:
+debugger;
+let ArrayFromAbove = [1,2,4,591,392,391,2,5,10,2,1,1,1,20,20];
+var array = ArrayFromAbove.sort((a,b) => a - b);
+console.log(array);
+//stackoverflow answer
+let grouped = array.reduce((accumulator, currentValue, index, array) => {
+    if (currentValue === array[index - 1]) {
+        accumulator[accumulator.length - 1].push(currentValue);
+    } else {
+        accumulator.push(currentValue === array[index + 1] ? [currentValue] : currentValue);
+    }
+    return accumulator;
+}, []);
+    
+console.log(grouped);
 
-const one = () => {
-	const two = () => {
-		console.log(4);
-	}
-	two();
+
+Question 2: Write a javascript function that takes an array of numbers and a target number. 
+The function should find two different numbers in the array that, when added together, 
+give the target number. For example: answer([1,2,3], 4)should return [1,3]
+
+//sol
+//1. Naive approach with o(n^2)
+//debugger;
+return_array = [];
+function answer(arr, x) {
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[i] + arr[j] === x) {
+                return_array.push([arr[i], arr[j]]);
+            }
+        }
+    }
+return return_array;
 }
+answer([1,2,3], 4)
 
-//call stack is first-in-last-out
-//Issues with multithreaded language is they have deadlocks
 
-//Recursion
-function foo() {
-	foo()
+//using hashtable. o(n)
+debugger;
+function answer(arr, x) {
+    sum = []
+    hashTable = {}
+    for (let i = 0; i <arr.length; i++) {
+        let num2 = x - arr[i];
+        if(hashTable[num2] !== undefined) {
+            sum.push([arr[i], num2]);
+        }
+        hashTable[arr[i]] = arr[i];
+    }
+    return sum;
 }
-foo()
+answer([1,2,3],4)
 
-//In javaScript non-blocking- Asynchronous behavior- can be obtainesd as below
-console.log('1');
-setTimeout(() => {
-	console.log('2');
-}, 2000)
-console.log('3');
 
-//setTimeout set to 0 sec
-console.log('1');
-setTimeout(() => {
-	console.log('2');
-}, 0)
-console.log('3');
 
-//javaScript runtime environment consists of the following
-//1. javaScript engine (memory heap and call stack)
-//2. web API's (DOM(document), AJAX(XML HTTP request), Timeout(setTimeout))
-//3. callback Queue (onClick, onLoad, onDone)
-//4. Event Loop
 
-//call stack
 
-//web APIs
+Question 3: Write a function that converts HEX to RGB. Then Make that function auto-dect the formats 
+so that if you enter HEX color format it returns RGB and if you enter RGB color format it returns HEX.
 
-//callback Queue
+//sol:
+function myFunction() {
+    let input = prompt("Please enter the digit: ");
+    const hex = '[0-9a-fA-F]';
+    const re = new RegExp(`^(${hex}{4}|${hex}{7})$`);
+    if(re.test(input)) {
+       return hexToRGB(input);
+    }
+    else {
+        return RGBToHex(input);
+    }
+}
+myFunction();
 
-//Event Loop
+function hexToRGB(h) {
+  let r = 0, g = 0, b = 0;
 
-element.addEventListener('click', () => {
-	console.log('click')
-})
+  // 3 digits
+  if (h.length == 4) {
+    r = "0x" + h[1] + h[1];
+    g = "0x" + h[2] + h[2];
+    b = "0x" + h[3] + h[3];
+
+  // 6 digits
+  } else if (h.length == 7) {
+    r = "0x" + h[1] + h[2];
+    g = "0x" + h[3] + h[4];
+    b = "0x" + h[5] + h[6];
+  }
+
+  return "rgb("+ +r + "," + +g + "," + +b + ")";  //variables are prepended with + to convert string back to numbers
+}
+//hexToRGB('2222')
+//hexToRGB('4616625')
+
+//debugger;
+function RGBToHex(r,g,b) {
+    let x = r.split(',').map(Number);
+    r = x[0].toString(16);
+    g = x[1].toString(16);
+    b = x[2].toString(16);
+
+    if(r.length == 1) {
+        r = "0" + r;
+    }
+    else if (g.length == 1) {
+        g = "0" + g;
+    }
+    else {
+        b = "0" + b;
+    }    
+    return "#" + r + g + b;
+}
+//RGBToHex(252, 177, 3)
+
+    
